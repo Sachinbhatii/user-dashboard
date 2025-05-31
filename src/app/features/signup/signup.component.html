@@ -1,0 +1,30 @@
+<div class="auth-container">
+
+  <h2>Signup </h2>
+
+  <form (ngSubmit)="signup()">
+
+    <input [(ngModel)]="username"
+           name="username"
+           placeholder="Username"
+           required>
+
+    <input [(ngModel)]="password"
+           name="password"
+           placeholder="Password"
+           type="password"
+           required>
+    <button class="signup-button"
+            type="submit"> Signup </button>
+
+  </form>
+
+  <p *ngIf="error"
+     class="error">{{ error }}</p>
+
+  <p>Already have an account?
+    <button class="login-button"
+            (click)="navigateToLogin()">login</button>
+  </p>
+
+</div>

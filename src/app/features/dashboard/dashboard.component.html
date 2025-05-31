@@ -1,0 +1,103 @@
+<div class="dashboard-container">
+
+  <!-- Header with Logout -->
+  <div class="dashboard-header">
+    <h2>User Dashboard</h2>
+    <button (click)="logout()">Logout</button>
+  </div>
+
+  <!-- Search Bar -->
+  <input type="text"
+         [value]="searchTerm()"
+         (input)="searchTerm.set($any($event.target).value)"
+         placeholder="Search users..."
+         class="search-bar" />
+
+  <!-- Show error and retry option -->
+  <div *ngIf="hasError()"
+       class="error-container">
+    <p class="error-message">Failed to load users.</p>
+    <button class="retry-btn"
+            (click)="retryFetch()">🔁 Retry</button>
+  </div>
+
+  <!-- Paginated Table -->
+  <div *ngIf="!hasError()">
+    @defer (when users().length > 0) {
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>City</th>
+          <th>Company</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of paginatedUsers()"
+            (click)="selectUser(user)"
+            appHighlight
+            [highlightColor]="'#e6f7ff'">
+          <td>{{ user.name }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.address.city }}</td>
+          <td>{{ user.company.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+      <button (click)="prevPage()"
+              [disabled]="currentPage() === 1">Prev</button>
+      <span>Page {{ currentPage() }} of {{ totalPages() }}</span>
+      <button (click)="nextPage()"
+              [disabled]="currentPage() === totalPages()">Next</button>
+    </div>
+
+    } @placeholder {
+    <p>🔄 Loading users...</p>
+    }
+
+    <!-- User Details -->
+    <div class="user-form"
+         *ngIf="selectedUser">
+      <h3>User Details</h3>
+      <form>
+        <label>Name:
+          <input [(ngModel)]="selectedUser.name"
+                 name="name">
+        </label>
+        <label>Username:
+          <input [(ngModel)]="selectedUser.username"
+                 name="username">
+        </label>
+        <label>Email:
+          <input [(ngModel)]="selectedUser.email"
+                 name="email">
+        </label>
+        <label>Phone:
+          <input [(ngModel)]="selectedUser.phone"
+                 name="phone">
+        </label>
+        <label>Website:
+          <input [(ngModel)]="selectedUser.website"
+                 name="website">
+        </label>
+        <label>City:
+          <input [(ngModel)]="selectedUser.address.city"
+                 name="city">
+        </label>
+        <label>Company:
+          <input [(ngModel)]="selectedUser.company.name"
+                 name="company">
+        </label>
+        <button type="button"
+                (click)="selectedUser = null">Close</button>
+      </form>
+    </div>
+
+  </div>
+</div>
